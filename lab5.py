@@ -42,53 +42,43 @@ class ASCIIArt3DShape:
 
 # Класс для куба
 class Cube(ASCIIArt3DShape):
-    def __init__(self, size=25, color='white'):
+    def __init__(self, size=5, color='white'):
         super().__init__(size, color)
         self.shape_data = [[' ']*size for _ in range(size)]
 
     def draw(self):
-        # Устанавливаем границы внешнего квадрата
+    # Обозначаем границы куба в ASCII-символах
         for i in range(self.size):
-            self.shape_data[0][i] = '#'  # Верхняя граница
-            self.shape_data[self.size - 1][i] = '#'  # Нижняя граница
-            self.shape_data[i][0] = '#'  # Левая граница
-            self.shape_data[i][self.size - 1] = '#'  # Правая граница
+            # Верхняя и нижняя границы
+            self.shape_data[0][i] = '#'
+            self.shape_data[self.size - 1][i] = '#'
+            # Левая и правая границы
+            self.shape_data[i][0] = '#'
+            self.shape_data[i][self.size - 1] = '#'
+    
+        # Диагонали для создания объемного эффекта
+        for i in range(1, self.size - 1):
+            self.shape_data[i][i] = '#'
+            if self.size - i - 1 > 0:
+                self.shape_data[i][self.size - i - 1] = '#'
 
-        # Размеры внутреннего квадрата
-        inner_size = self.size // 3
-        inner_start = (self.size - inner_size) // 2
-
-        # Устанавливаем границы внутреннего квадрата
-        for i in range(inner_size):
-            # Верхняя сторона
-            self.shape_data[inner_start][inner_start + i] = '#'
-            # Нижняя сторона
-            self.shape_data[inner_start + inner_size - 1][inner_start + i] = '#'
-            # Левая сторона
-            self.shape_data[inner_start + i][inner_start] = '#'
-            # Правая сторона
-            self.shape_data[inner_start + i][inner_start + inner_size - 1] = '#'
-            
-            # Диагонали
-            self.shape_data[inner_start + i][inner_start + i] = '#'  # Из верхнего левого в нижний правый
-            self.shape_data[inner_start + i][inner_start + inner_size - 1 - i] = '#'  # Из верхнего правого в нижний левый
 
     def project_to_2d(self):
-        # Простая проекция
+        # Проекция — добавляем символы по строкам
         projection = []
         for row in self.shape_data:
-            projection.append(''.join(row))
+            projection.append(' '.join(row))
         return projection
 
     def display_ascii_art(self):
-       color_map = {
-           'red': Fore.RED,
-           'green': Fore.GREEN,
-           'blue': Fore.BLUE,
-           'white': Fore.WHITE,
-       }
-       for line in self.project_to_2d():
-           print(color_map.get(self.color, Fore.WHITE) + line + Fore.RESET)
+        color_map = {
+            'red': Fore.RED,
+            'green': Fore.GREEN,
+            'blue': Fore.BLUE,
+            'white': Fore.WHITE,
+        }
+        for line in self.project_to_2d():
+            print(color_map.get(self.color, Fore.WHITE) + line + Fore.RESET)
 
 # Класс для GUI интерфейса
 class ArtApp:
